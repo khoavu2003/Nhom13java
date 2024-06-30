@@ -1,2 +1,4 @@
-package com.example.Bank.Entities;public class user_role {
+package com.example.Bank.Entities;
+
+public class user_role {
 }
