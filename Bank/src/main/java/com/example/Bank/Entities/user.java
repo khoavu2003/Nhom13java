@@ -1,17 +1,18 @@
 package com.example.Bank.Entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.Hibernate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
+@Data
 @Table(name = "users")
-public class user {
+public class user implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -50,115 +51,52 @@ public class user {
     @Column(name = "google_account_id")
     private Integer googleAccountId = 0;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "role_id")
-    private role role;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<bank_accounts> bankAccounts;
-
-    // Getters and Setters
-    public Integer getId() {
-        return id;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<role> roles = new HashSet<>();
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<role> userRoles = this.getRoles();
+        return userRoles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .toList();
     }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
+    @Override
     public String getPassword() {
         return password;
     }
-
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public String getUsername() {
+        return fullname;
+    }
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return
+                false;
+        user user = (user) o;
+        return getId() != null && Objects.equals(getId(), user.getId());
+    }
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Boolean getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
-    }
-
-    public Date getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public Integer getFacebookAccountId() {
-        return facebookAccountId;
-    }
-
-    public void setFacebookAccountId(Integer facebookAccountId) {
-        this.facebookAccountId = facebookAccountId;
-    }
-
-    public Integer getGoogleAccountId() {
-        return googleAccountId;
-    }
-
-    public void setGoogleAccountId(Integer googleAccountId) {
-        this.googleAccountId = googleAccountId;
-    }
-
-    public role getRole() {
-        return role;
-    }
-
-    public void setRole(role role) {
-        this.role = role;
-    }
-
-    public List<bank_accounts> getBankAccounts() {
-        return bankAccounts;
-    }
-
-    public void setBankAccounts(List<bank_accounts> bankAccounts) {
-        this.bankAccounts = bankAccounts;
-    }
 }
