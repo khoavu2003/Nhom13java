@@ -9,7 +9,7 @@ public class BankingService {
     private BankRepository bankRepository;
 
     public boolean authenticatePin(String accountNumber, String pinAttempt) {
-        bank_accounts accounts = bankRepository.FindByAccountNumber(accountNumber);
+        bank_accounts accounts = bankRepository.findByAccountNumber(accountNumber);
         if (accounts != null) {
             return accounts.getPin().equals(pinAttempt);
         }
@@ -17,7 +17,7 @@ public class BankingService {
     }
 
     public void lockAccount(String accountNumber) {
-        bank_accounts accounts = bankRepository.FindByAccountNumber(accountNumber);
+        bank_accounts accounts = bankRepository.findByAccountNumber(accountNumber);
         if (accounts != null) {
             // Khóa tài khoản
             accounts.setIsActive(false);

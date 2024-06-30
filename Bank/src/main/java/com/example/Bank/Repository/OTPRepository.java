@@ -1,3 +1,4 @@
+/*
 package com.example.Bank.Repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,3 +13,4 @@ public interface OTPRepository extends JpaRepository<OTP, Long> {
     // Tìm mã OTP mới nhất cho một người dùng theo userId
     Optional<OTP> findTopByUserOrderByOtpIdDesc(User user);
 }
+*/

@@ -1,5 +1,4 @@
 package com.example.Bank.Service;
-
 import com.example.Bank.Entities.User;
 import com.example.Bank.Entities.bank_accounts;
 import com.example.Bank.Repository.BankRepository;
@@ -11,11 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-
+@Service
 public class SMSService {
 
     @Autowired

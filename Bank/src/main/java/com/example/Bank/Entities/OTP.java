@@ -1,3 +1,4 @@
+/*
 package com.example.Bank.Entities;
 
 import jakarta.persistence.GeneratedValue;
@@ -19,3 +20,4 @@ public class OTP {
 
 }
 
+*/

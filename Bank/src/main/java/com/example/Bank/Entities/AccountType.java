@@ -24,6 +24,6 @@ public class AccountType {
     @Column(name = "name", length = 200)
     private String name;
 
-    @OneToMany(mappedBy = "bank_accounts", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "accountType", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<bank_accounts> bankAccounts;
 }
