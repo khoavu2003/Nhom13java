@@ -1,7 +1,7 @@
 package com.example.Bank.Entities;
 
 import jakarta.persistence.*;
-import jakarta.transaction.Transaction;
+import jakarta.validation.constraints.NotNull;
 
 
 import java.math.BigDecimal;
@@ -18,14 +18,32 @@ public class bank_accounts {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private user user;
+    private User user;
 
-    @Column(name = "account_number", nullable = false, unique = true, length = 20)
+
+    @NotNull
+    @Column(name = "account_number", unique = true, length = 20)
     private String accountNumber;
 
-    @Column(name = "balance", nullable = false)
+
+    @ManyToOne
+    @JoinColumn(name="account_type",referencedColumnName = "type_id")
+    private AccountType accountType;
+
+    @NotNull
+    @Column(name = "Pin", length = 6)
+    private String pin;
+
+    @NotNull
+    @Column(name = "is_active")
+    private Boolean isActive = true;
+
+    @NotNull
+    @Column(name = "balance")
     private BigDecimal balance = BigDecimal.ZERO;
     @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+
+
     private List<transaction> transactions;
 
     // Getters and Setters
@@ -38,12 +56,20 @@ public class bank_accounts {
         this.id = id;
     }
 
-    public user getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(user user) {
+    public void setUser(User user) {
         this.user = user;
+    }
+
+    public AccountType getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(AccountType accountType) {
+        this.accountType = accountType;
     }
 
     public String getAccountNumber() {
@@ -60,6 +86,20 @@ public class bank_accounts {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+    public String getPin() {
+        return pin;
+    }
+
+    public void setPin(String pin) {
+        this.pin = pin;
+    }
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
     }
 }
 

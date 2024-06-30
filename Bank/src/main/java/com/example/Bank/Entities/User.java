@@ -1,32 +1,43 @@
 package com.example.Bank.Entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Date;
-import java.util.List;
-
+import java.util.*;
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
-public class user {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
 
-    @Column(name = "fullname", length = 100)
+    @NotNull
+    @Column(name = "fullname",length = 50)
     private String fullname;
 
-    @Column(name = "phone_number", nullable = false, length = 10)
+    @NotNull
+    @Column(name = "phone_number", length = 10,unique = true)
     private String phoneNumber;
 
-    @Column(name = "address", length = 200)
+    @NotNull
+    @Column(name = "Email", length = 100,unique = true)
+    private String email;
+
+    @NotNull
+    @Column(name = "address", length = 250)
     private String address;
 
-    @Column(name = "password", nullable = false, length = 100)
+    @NotNull
+    @Column(name = "password", length = 100)
     private String password;
 
     @Column(name = "created_at")
@@ -37,27 +48,27 @@ public class user {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    @Column(name = "is_active", nullable = false)
+    @NotNull
+    @Column(name = "is_active")
     private Boolean isActive = true;
 
+    @NotNull
     @Column(name = "date_of_birth")
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
-    @Column(name = "facebook_account_id")
-    private Integer facebookAccountId = 0;
+    @NotNull
+    @Column(name = "CCCD", length = 100,unique = true)
+    private String cccd;
 
-    @Column(name = "google_account_id")
-    private Integer googleAccountId = 0;
-
-    @ManyToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "role_id")
-    private role role;
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name = "role_id", referencedColumnName = "Roleid")
+    private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<bank_accounts> bankAccounts;
 
-    // Getters and Setters
+   // Getters and Setters
     public Integer getId() {
         return id;
     }
@@ -82,6 +93,14 @@ public class user {
         this.phoneNumber = phoneNumber;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getAddress() {
         return address;
     }
@@ -96,6 +115,14 @@ public class user {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getCccd() {
+        return cccd;
+    }
+
+    public void setCccd(String cccd) {
+        this.cccd = cccd;
     }
 
     public Date getCreatedAt() {
@@ -130,27 +157,11 @@ public class user {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public Integer getFacebookAccountId() {
-        return facebookAccountId;
-    }
-
-    public void setFacebookAccountId(Integer facebookAccountId) {
-        this.facebookAccountId = facebookAccountId;
-    }
-
-    public Integer getGoogleAccountId() {
-        return googleAccountId;
-    }
-
-    public void setGoogleAccountId(Integer googleAccountId) {
-        this.googleAccountId = googleAccountId;
-    }
-
-    public role getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(role role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -160,5 +171,31 @@ public class user {
 
     public void setBankAccounts(List<bank_accounts> bankAccounts) {
         this.bankAccounts = bankAccounts;
+    }
+
+    @Override
+    public String getUsername() {
+        return fullname;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.getName()));
+    }
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
