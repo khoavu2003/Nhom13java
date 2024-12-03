@@ -2,12 +2,14 @@ package com.example.Bank.Entities;
 
 import jakarta.persistence.*;
 import jakarta.transaction.Transaction;
+import lombok.Data;
 
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
+@Data
 @Table(name = "bank_accounts")
 public class bank_accounts {
 

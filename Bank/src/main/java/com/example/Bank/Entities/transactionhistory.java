@@ -2,10 +2,12 @@ package com.example.Bank.Entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Date;
 
 @Entity
+@Data
 @Table(name = "transaction_history")
 public class transactionhistory {
     @Id
